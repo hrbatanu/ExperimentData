@@ -1,5 +1,13 @@
--- Enable DECIMAL precision and scale support in ODPS
+-- ============================================================================
+-- IMPORTANT: ODPS requires this setting to use DECIMAL with precision/scale
+-- ============================================================================
+-- If your environment allows SET statements, uncomment the line below:
 SET odps.sql.decimal.odps2=true;
+
+-- If your environment requires CREATE TABLE to start, run this separately first:
+--   SET odps.sql.decimal.odps2=true;
+-- Or set it at the session/system level in your ODPS configuration.
+-- ============================================================================
 
 -- Step 4: Final Consumer × Influencer Scores Table (TOP 20 INFLUENCERS)
 CREATE TABLE IF NOT EXISTS lha_research_dev.consumer_influencer_loyalty_scores AS
