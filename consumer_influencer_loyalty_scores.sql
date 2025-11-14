@@ -1,12 +1,8 @@
 -- ============================================================================
--- IMPORTANT: ODPS requires this setting to use DECIMAL with precision/scale
+-- ODPS-Compatible Version (No odps.sql.decimal.odps2 required)
 -- ============================================================================
--- If your environment allows SET statements, uncomment the line below:
-SET odps.sql.decimal.odps2=true;
-
--- If your environment requires CREATE TABLE to start, run this separately first:
---   SET odps.sql.decimal.odps2=true;
--- Or set it at the session/system level in your ODPS configuration.
+-- This version uses DOUBLE instead of DECIMAL(precision,scale) to avoid
+-- requiring the odps2 setting. Values are still rounded to 1 decimal place.
 -- ============================================================================
 
 -- Step 4: Final Consumer × Influencer Scores Table (TOP 20 INFLUENCERS)
@@ -17,35 +13,35 @@ SELECT
 
     -- Raw metrics from Step 1 (6 months) - optimized storage
     m.purchases_6m,  -- COUNT, already integer
-    CAST(ROUND(m.spend_6m, 1) AS DECIMAL(12,1)) AS spend_6m,
+    CAST(ROUND(m.spend_6m, 1) AS DOUBLE) AS spend_6m,
     m.unique_feeds_6m,  -- COUNT DISTINCT, already integer
-    CAST(ROUND(m.total_stay_hours_6m, 1) AS DECIMAL(8,1)) AS total_stay_hours_6m,
+    CAST(ROUND(m.total_stay_hours_6m, 1) AS DOUBLE) AS total_stay_hours_6m,
 
     -- Raw metrics from Step 1 (2 months) - optimized storage
     m.purchases_2m,  -- COUNT, already integer
-    CAST(ROUND(m.spend_2m, 1) AS DECIMAL(12,1)) AS spend_2m,
+    CAST(ROUND(m.spend_2m, 1) AS DOUBLE) AS spend_2m,
     m.unique_feeds_2m,  -- COUNT DISTINCT, already integer
-    CAST(ROUND(m.total_stay_hours_2m, 1) AS DECIMAL(8,1)) AS total_stay_hours_2m,
+    CAST(ROUND(m.total_stay_hours_2m, 1) AS DOUBLE) AS total_stay_hours_2m,
 
     -- Per-consumer max values from Step 3 (for normalization later) - optimized storage
     mx.max_purchases_6m,  -- MAX of COUNT, already integer
-    CAST(ROUND(mx.max_spend_6m, 1) AS DECIMAL(12,1)) AS max_spend_6m,
+    CAST(ROUND(mx.max_spend_6m, 1) AS DOUBLE) AS max_spend_6m,
     mx.max_unique_feeds_6m,  -- MAX of COUNT DISTINCT, already integer
-    CAST(ROUND(mx.max_total_hours_6m, 1) AS DECIMAL(8,1)) AS max_total_hours_6m,
+    CAST(ROUND(mx.max_total_hours_6m, 1) AS DOUBLE) AS max_total_hours_6m,
     mx.max_purchases_2m,  -- MAX of COUNT, already integer
-    CAST(ROUND(mx.max_spend_2m, 1) AS DECIMAL(12,1)) AS max_spend_2m,
+    CAST(ROUND(mx.max_spend_2m, 1) AS DOUBLE) AS max_spend_2m,
     mx.max_unique_feeds_2m,  -- MAX of COUNT DISTINCT, already integer
-    CAST(ROUND(mx.max_total_hours_2m, 1) AS DECIMAL(8,1)) AS max_total_hours_2m,
+    CAST(ROUND(mx.max_total_hours_2m, 1) AS DOUBLE) AS max_total_hours_2m,
 
     -- Consumer totals from Step 2 (for exclusivity calculation later) - optimized storage
     t.total_purchases_6m,  -- COUNT DISTINCT, already integer
-    CAST(ROUND(t.total_spend_6m, 1) AS DECIMAL(12,1)) AS total_spend_6m,
+    CAST(ROUND(t.total_spend_6m, 1) AS DOUBLE) AS total_spend_6m,
     t.total_unique_feeds_6m,  -- COUNT DISTINCT, already integer
-    CAST(ROUND(t.total_stay_hours_6m, 1) AS DECIMAL(8,1)) AS total_stay_hours_6m,
+    CAST(ROUND(t.total_stay_hours_6m, 1) AS DOUBLE) AS total_stay_hours_6m,
     t.total_purchases_2m,  -- COUNT DISTINCT, already integer
-    CAST(ROUND(t.total_spend_2m, 1) AS DECIMAL(12,1)) AS total_spend_2m,
+    CAST(ROUND(t.total_spend_2m, 1) AS DOUBLE) AS total_spend_2m,
     t.total_unique_feeds_2m,  -- COUNT DISTINCT, already integer
-    CAST(ROUND(t.total_stay_hours_2m, 1) AS DECIMAL(8,1)) AS total_stay_hours_2m
+    CAST(ROUND(t.total_stay_hours_2m, 1) AS DOUBLE) AS total_stay_hours_2m
 
 FROM tmp_consumer_influencer_metricsb m
 LEFT JOIN tmp_consumer_influencer_totals t
